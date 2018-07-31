@@ -41,6 +41,7 @@ In the upper left corner click the “+” icon to create a new file. Call it Mu
 
 Copy the contents of the MultiSignatureWallet.sol file found in the project directory into Remix.
 
+![](./gifs/remix.gif)
 
 Let’s review what this contract needs to be able to do before we start writing the code.
 
