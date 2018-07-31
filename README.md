@@ -27,7 +27,7 @@ Following this project spec designed by the UPenn Blockchain Club, you will now 
 
 ## Project Setup
 
-Clone this github repository. The [MultiSignatureWallet.sol](./contracts/MultiSignatureWallet.sol) file in teh contracts directory has the structure of a multisignature wallet that you will be implementing.
+Clone this github repository. The [MultiSignatureWallet.sol](./contracts/MultiSignatureWallet.sol) file in the contracts directory has the structure of a multisignature wallet that you will be implementing.
 
 
 ## Implementing the Contract
@@ -88,7 +88,7 @@ And call it when the constructor runs.
         {...}
 ```
 
-We are going to want to keep the _owners and _required values for the life of the contract, so we need to declare the variables in storage in order to save them.
+We are going to want to keep the `_owners` and `_required` values for the life of the contract, so we need to declare the variables in storage in order to save them.
 
 ```javascript
     address[] public owners;
@@ -116,7 +116,7 @@ All of these variables will be set in the constructor.
 ## Submit Transaction
 
 
-The submitTransaction function allows an owner to submit and confirm a transaction.
+The `submitTransaction` function allows an owner to submit and confirm a transaction.
 
 
 First we need to restrict this function to only be callable by an owner.
@@ -125,10 +125,10 @@ First we need to restrict this function to only be callable by an owner.
     require(isOwner[msg.sender]);
 ```
 
-Looking at the rest of the contract stub, you will notice that there are two other functions in the contract that can help you implement this function, one is called addTransaction that takes the same inputs as submitTransaction and returns a uint transactionId. The other is called confirmTransaction that takes a uint transactionId.
+Looking at the rest of the contract stub, you will notice that there are two other functions in the contract that can help you implement this function, one is called `addTransaction` that takes the same inputs as `submitTransaction` and returns a `uint transactionId`. The other is called `confirmTransaction` that takes a `uint transactionId`.
 
 
-We can easily implement submitTransaction with the help of these other functions:
+We can easily implement `submitTransaction` with the help of these other functions:
 
 ```javascript
     function submitTransaction(address destination, uint value, bytes data) 
@@ -144,11 +144,11 @@ We can easily implement submitTransaction with the help of these other functions
 ## Add Transaction
 
 
-Let’s jump to the addTransaction function and implement that. This function adds a new transaction to the transaction mapping (which we are about to create), if the transaction does not exist yet.
+Let’s jump to the `addTransaction` function and implement that. This function adds a new transaction to the transaction mapping (which we are about to create), if the transaction does not exist yet.
 
-
-function addTransaction(address destination, uint value, bytes data) internal returns (uint transactionId);
-
+```javascript
+    function addTransaction(address destination, uint value, bytes data) internal returns (uint transactionId);
+```
 
 A transaction is a data structure that is defined in the contract stub.
 
@@ -161,17 +161,17 @@ A transaction is a data structure that is defined in the contract stub.
     }
 ```
 
-We need to store the inputs to the addTransaction function in a Transaction struct and create a transaction id for the transaction. Let’s create two more storage variables to keep track of the transaction ids and transaction mapping.
+We need to store the inputs to the `addTransaction` function in a Transaction struct and create a transaction id for the transaction. Let’s create two more storage variables to keep track of the transaction ids and transaction mapping.
 
 ```javascript
     uint public transactionCount;
     mapping (uint => Transaction) public transactions;
 ```
 
-In the addTransaction function we can get the transaction count, store the transaction in the mapping and increment the count. This function modifies the state so it is a good practice to emit an event. 
+In the `addTransaction` function we can get the transaction count, store the transaction in the mapping and increment the count. This function modifies the state so it is a good practice to emit an event. 
 
 
-We will emit a Submission event that takes a transactionId. Let’s define the event first. Events are usually defined at the top of a Solidity contract, so that is what we will do. Add this line just below the contract declaration.
+We will emit a `Submission` event that takes a `transactionId`. Let’s define the event first. Events are usually defined at the top of a Solidity contract, so that is what we will do. Add this line just below the contract declaration.
 
 ```javascript
     event Submission(uint indexed transactionId);
@@ -217,7 +217,7 @@ This requires another storage variable, a confirmations mapping that stores a ma
     mapping (uint => mapping (address => bool)) public confirmations;
 ```
 
-There are several checks that we will want to verify before we execute this transaction. First, only wallet owners should be able to call this function. Second, we will want to verify that a transaction exists at the specified transactionId. Last, we want to verify that the msg.sender has not already confirmed this transaction.
+There are several checks that we will want to verify before we execute this transaction. First, only wallet owners should be able to call this function. Second, we will want to verify that a transaction exists at the specified `transactionId`. Last, we want to verify that the `msg.sender` has not already confirmed this transaction.
 
 ```javascript
     require(isOwner[msg.sender]);
@@ -231,7 +231,7 @@ Once the transaction receives the required number of confirmations, the transact
     confirmations[transactionId][msg.sender] = true;
 ```
 
-Since we are modifying the state in this function, it is a good practice to log an event. First, we define the event called Confirmation that logs the confirmers address as well as the transactionId of the transaction that they are confirming.
+Since we are modifying the state in this function, it is a good practice to log an event. First, we define the event called `Confirmation` that logs the confirmers address as well as the `transactionId` of the transaction that they are confirming.
 
 ```javascript
     event Confirmation(address indexed sender, uint indexed transactionId);
@@ -297,7 +297,7 @@ I define the helper function isConfirmed, which we can call from the `executeTra
     }
 ```
 
-It will return true if the transaction is confirmed, so in the executeTransaction function, we can execute the transaction at the specified if it is confirmed, otherwise do not execute it and then update the Transaction struct to reflect the state.
+It will return true if the transaction is confirmed, so in the `executeTransaction` function, we can execute the transaction at the specified if it is confirmed, otherwise do not execute it and then update the Transaction struct to reflect the state.
 
 
 We are updating the state, so we should log an event reflecting the change.
