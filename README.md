@@ -24,8 +24,24 @@ Following this project spec designed by the UPenn Blockchain Club, you will now 
 2. Learn how to avoid loops and implement voting
 3. [To learn to assess possible attacks on contracts.](https://github.com/ConsenSys/smart-contract-best-practices)
 
+Table of contents
+=================
+<!--ts-->
+   * [gh-md-toc](#gh-md-toc)
+   * [Table of contents](#table-of-contents)
+   * [Installation](#installation)
+   * [Usage](#usage)
+      * [STDIN](#stdin)
+      * [Local files](#local-files)
+      * [Remote files](#remote-files)
+      * [Multiple files](#multiple-files)
+      * [Combo](#combo)
+      * [Auto insert and update TOC](#auto-insert-and-update-toc)
+   * [Tests](#tests)
+   * [Dependency](#dependency)
+<!--te-->
 
-## Project Setup
+Project Setup
 
 Clone this github repository. The [MultiSignatureWallet.sol](./contracts/MultiSignatureWallet.sol) file in the contracts directory has the structure of a multisignature wallet that you will be implementing.
 
