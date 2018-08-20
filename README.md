@@ -24,14 +24,29 @@ Following this project spec designed by the UPenn Blockchain Club, you will now 
 2. Learn how to avoid loops and implement voting
 3. [To learn to assess possible attacks on contracts.](https://github.com/ConsenSys/smart-contract-best-practices)
 
+Table of contents
+=================
+<!--ts-->
+   * [Project Setup](#project-setup)
+   * [Implementing the Contract](#implementing-the-contract)
+      * [Constructor](#constructor)
+      * [Submit Transaction](#submit-transaction)
+      * [Add Transaction](#add-transaction)
+      * [Confirm Transaction](#confirm-transaction)
+      * [Execute Transaction](#execute-transaction)
+      * [Additional Functions](#additional-functions)
+   * [Interacting with the Contract](#interacting-with-the-contract)
+   * [Further-Reading](#further-reading)
+<!--te-->
 
-## Project Setup
+Project Setup
+============
 
 Clone this github repository. The [MultiSignatureWallet.sol](./contracts/MultiSignatureWallet.sol) file in the contracts directory has the structure of a multisignature wallet that you will be implementing.
 
 
-## Implementing the Contract
-
+Implementing the Contract
+============
 
 Let’s work on this contract in Remix to get more familiar with the Remix IDE. Navigate to [Remix](https://remix.ethereum.org/) in your browser.
 
@@ -55,8 +70,8 @@ Keeping these requirements in mind, let’s start going through the contract stu
 Remix is a browser based IDE that has code parsing built in, so it will show us any syntax or compilation errors directly in our environment. Notice the yellow triangles along the left side of the screen. Hovering over the triangle with your cursor will display the warning message. Yellow triangles are warning messages, whereas red circles are error messages and will prevent your contract from compiling.
 
 
-## Constructor
-
+Constructor
+=====
 
 Starting with the constructor, you can see that with the latest solidity compiler version, using the contract name as the constructor name has been deprecated, so let’s change it to constructor.
 
@@ -114,8 +129,8 @@ All of these variables will be set in the constructor.
     } 
 ```
 
-## Submit Transaction
-
+Submit Transaction
+=====
 
 The `submitTransaction` function allows an owner to submit and confirm a transaction.
 
@@ -142,8 +157,8 @@ We can easily implement `submitTransaction` with the help of these other functio
     }
 ```
 
-## Add Transaction
-
+Add Transaction
+=====
 
 Let’s jump to the `addTransaction` function and implement that. This function adds a new transaction to the transaction mapping (which we are about to create), if the transaction does not exist yet.
 
@@ -203,7 +218,8 @@ In the function body we can call the event.
 The `uint transactionId` is returned for the `submitTransaction` function to hand over to the `confirmTransaction` function.
 
 
-## Confirm Transaction
+Confirm Transaction
+=====
 
 ```javascript
     function confirmTransaction(uint transactionId) public {}
@@ -262,8 +278,8 @@ So the entire function should look like this:
     }
 ```
 
-## Execute Transaction
-
+Execute Transaction
+=====
 
 The execute transaction function takes a single parameter, the `transactionId`.
 
@@ -328,7 +344,8 @@ We have two possible outcomes of this function -- the transaction is not guarant
     }
 ```
 
-## Additional Functions
+Additional Functions
+=====
 
 So far, we have only covered the core functionality of this MultiSignature Wallet found in the ConsenSys github repository.
 
@@ -339,8 +356,8 @@ I will leave it to you to continue the exercise and explore the rest of the cont
 If you would like a further challenge, continue on to the bottom of the Solidity file and investigate the MultiSigWalletWithDailyLimit contract.
 
 
-## Interacting with the Contract
-
+Interacting with the Contract
+============
 
 Now that we have a basic MultiSignature Wallet, let’s interact with the Multisig Wallet and see how it works.
 
@@ -443,3 +460,11 @@ truffle(develop)> ms.address
 ```
 
 The two addresses are the same!
+
+Further Reading
+============
+(ConsenSys MultiSig Repo)[https://medium.com/hellogold/ethereum-multi-signature-wallets-77ab926ab63b]
+(List of MultiSig Contracts on Mainnet)[https://medium.com/talo-protocol/list-of-multisig-wallet-smart-contracts-on-ethereum-3824d528b95e]
+(What is a MultiSig Wallet?)[https://medium.com/hellogold/ethereum-multi-signature-wallets-77ab926ab63b]
+(Unchained Capital's Multi-Sig)[https://blog.unchained-capital.com/a-simple-safe-multisig-ethereum-smart-contract-for-hardware-wallets-a107bd90bb52]
+(Grid+: Toward an Ethereum MultiSig Standard)[https://blog.gridplus.io/toward-an-ethereum-multisig-standard-c566c7b7a3f6]
