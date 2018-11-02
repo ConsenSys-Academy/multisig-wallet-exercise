@@ -463,8 +463,8 @@ The two addresses are the same!
 
 Further Reading
 ============
-(ConsenSys MultiSig Repo)[https://medium.com/hellogold/ethereum-multi-signature-wallets-77ab926ab63b]
-(List of MultiSig Contracts on Mainnet)[https://medium.com/talo-protocol/list-of-multisig-wallet-smart-contracts-on-ethereum-3824d528b95e]
-(What is a MultiSig Wallet?)[https://medium.com/hellogold/ethereum-multi-signature-wallets-77ab926ab63b]
-(Unchained Capital's Multi-Sig)[https://blog.unchained-capital.com/a-simple-safe-multisig-ethereum-smart-contract-for-hardware-wallets-a107bd90bb52]
-(Grid+: Toward an Ethereum MultiSig Standard)[https://blog.gridplus.io/toward-an-ethereum-multisig-standard-c566c7b7a3f6]
+- [ConsenSys MultiSig Repo](https://medium.com/hellogold/ethereum-multi-signature-wallets-77ab926ab63b)
+- [List of MultiSig Contracts on Mainnet](https://medium.com/talo-protocol/list-of-multisig-wallet-smart-contracts-on-ethereum-3824d528b95e)
+- [What is a MultiSig Wallet?](https://medium.com/hellogold/ethereum-multi-signature-wallets-77ab926ab63b)
+- [Unchained Capital's Multi-Sig](https://blog.unchained-capital.com/a-simple-safe-multisig-ethereum-smart-contract-for-hardware-wallets-a107bd90bb52)
+- [Grid+: Toward an Ethereum MultiSig Standard](https://blog.gridplus.io/toward-an-ethereum-multisig-standard-c566c7b7a3f6)
