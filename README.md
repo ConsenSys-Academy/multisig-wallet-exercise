@@ -405,7 +405,7 @@ truffle(develop)> var ms = MultiSignatureWallet.at(MultiSignatureWallet.address)
 Check the state of the the SimpleStorage contract
 
 ```
-truffle(develop)> ss.get.call()
+truffle(develop)> ss.storedData.call()
 BigNumber { s: 1, e: 0, c: [ 0 ] }
 ```
 
