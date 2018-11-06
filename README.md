@@ -42,7 +42,7 @@ Table of contents
 Project Setup
 ============
 
-Clone this github repository. The [MultiSignatureWallet.sol](./contracts/MultiSignatureWallet.sol) file in the contracts directory has the structure of a multisignature wallet that you will be implementing.
+Clone this GitHub repository. The [MultiSignatureWallet.sol](./contracts/MultiSignatureWallet.sol) file in the contracts directory has the structure of a multisignature wallet that you will be implementing.
 
 
 Implementing the Contract
