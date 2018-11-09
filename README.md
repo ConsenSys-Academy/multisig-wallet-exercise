@@ -353,7 +353,7 @@ So far, we have only covered the core functionality of this MultiSignature Walle
 I will leave it to you to continue the exercise and explore the rest of the contract. The code is well commented and you should be able to determine and explain the purpose of each function in the contract.
 
 
-If you would like a further challenge, continue on to the bottom of the Solidity file and investigate the MultiSigWalletWithDailyLimit contract.
+If you would like a further challenge, continue on to the bottom of the Solidity file and investigate the [MultiSigWalletWithDailyLimit contract](https://github.com/ConsenSys/MultiSigWallet/blob/master/MultiSigWalletWithDailyLimit.sol).
 
 
 Interacting with the Contract
