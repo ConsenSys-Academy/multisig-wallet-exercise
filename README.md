@@ -398,21 +398,21 @@ truffle(develop)> migrate
 And then get the deployed instances of the SimpleStorage.sol and MultiSignatureWallet.sol contracts.
 
 ```
-truffle(develop)> var ss = SimpleStorage.at(SimpleStorage.address)
-truffle(develop)> var ms = MultiSignatureWallet.at(MultiSignatureWallet.address)
+truffle(develop)> var ss = await SimpleStorage.at(SimpleStorage.address)
+truffle(develop)> var ms = await MultiSignatureWallet.at(MultiSignatureWallet.address)
 ```
 
 Check the state of the the SimpleStorage contract
 
 ```
 truffle(develop)> ss.storedData.call()
-BigNumber { s: 1, e: 0, c: [ 0 ] }
+<BN: 0>
 ```
 
 This means that it is 0. You can verify by waiting for the promise to resolve and converting the answer to a string. Try it with:
 
 ```
-ss.get.call().then(res => { console.log( res.toString(10) )} )
+ss.storedData.call().then(res => { console.log( res.toString(10) )} )
 0
 ```
 
@@ -428,7 +428,8 @@ var encoded = ‘0x60fe47b100000000000000000000000000000000000000000000000000000
 So the MultiSig contract call looks like:
 
 ```
-truffle(develop)> ms.submitTransaction(ss.address, 0, encoded, {from: web3.eth.accounts[0]})
+truffle(develop)> let accounts = await web3.eth.getAccounts()
+truffle(develop)> ms.submitTransaction(ss.address, 0, encoded, {from: accounts[0]})
 ```
 
 And we see the transaction information printed in the terminal window. In the logs, we can see that a “Submission” event was fired, as well as a “Confirmation” event, which is what we expect. 
@@ -437,7 +438,7 @@ And we see the transaction information printed in the terminal window. In the lo
 The current state of the MultiSig has one transaction that has not been executed and has one confirmation (from the address that submitted it). One more confirmation should cause the transaction to execute. Let’s use the second account to confirm it. The `confirmTransaction` function takes one input, the index of the Transaction to confirm.
 
 ```
-truffle(develop)> ms.confirmTransaction(0, {from: web3.eth.accounts[1]})
+truffle(develop)> ms.confirmTransaction(0, {from: accounts[1]})
 ```
 
 The transaction information is printed in the terminal. You should see two log events this time as well. A “Confirmation” event as well as an “Execution” event. This indicates that the call to SimpleStorage executed successfully. If it didn’t execute successfully, we would see an “ExecutionFailure” event there instead.
@@ -447,7 +448,7 @@ We can verify that the state of the contract was updated by running
 
 ```
 truffle(develop)> ss.storedData.call()
-BigNumber { s: 1, e: 0, c: [ 5 ] }
+<BN: 5>
 ```
 
 The `storedData` is now 5. And we can check that the address that updated the SimpleStorage contract was the MultiSig Wallet.
