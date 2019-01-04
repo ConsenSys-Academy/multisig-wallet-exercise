@@ -76,7 +76,7 @@ Constructor
 Starting with the constructor, you can see that with the latest solidity compiler version, using the contract name as the constructor name has been deprecated, so let’s change it to constructor.
 
 ```javascript
-    constructor(address[] _owners, uint _required)
+    constructor(address[] memory _owners, uint _required)
 ```
 
 We are going to want to check the user inputs to the constructor to make sure that a user does not require more confirmations than there are owners, that the contract requires at least one confirmation before sending a transaction and that the owner array contains at least one address.
@@ -99,7 +99,7 @@ We can create a modifier that checks these conditions
 And call it when the constructor runs.
 
 ```javascript
-    constructor(address[] _owners, uint _required) public 
+    constructor(address[] memory _owners, uint _required) public 
             validRequirement(_owners.length, _required)
         {...}
 ```
@@ -118,7 +118,7 @@ We also added a mapping of owner addresses to booleans so that we can quickly re
 All of these variables will be set in the constructor.
 
 ```javascript
-    constructor(address[] _owners, uint _required) public 
+    constructor(address[] memory _owners, uint _required) public 
         validRequirement(_owners.length, _required)
     {
         for (uint i=0; i<_owners.length; i++) {
@@ -147,7 +147,7 @@ Looking at the rest of the contract stub, you will notice that there are two oth
 We can easily implement `submitTransaction` with the help of these other functions:
 
 ```javascript
-    function submitTransaction(address destination, uint value, bytes data) 
+    function submitTransaction(address destination, uint value, bytes memory data) 
         public 
         returns (uint transactionId) 
     {
@@ -163,7 +163,7 @@ Add Transaction
 Let’s jump to the `addTransaction` function and implement that. This function adds a new transaction to the transaction mapping (which we are about to create), if the transaction does not exist yet.
 
 ```javascript
-    function addTransaction(address destination, uint value, bytes data) internal returns (uint transactionId);
+    function addTransaction(address destination, uint value, bytes memory data) internal returns (uint transactionId);
 ```
 
 A transaction is a data structure that is defined in the contract stub.
@@ -199,7 +199,7 @@ The ***indexed*** keyword in the event declaration makes the event easily search
 In the function body we can call the event.
 
 ```javascript
-    function addTransaction(address destination, uint value, bytes data)
+    function addTransaction(address destination, uint value, bytes memory data)
         internal
         returns (uint transactionId)
     {
@@ -211,7 +211,7 @@ In the function body we can call the event.
             executed: false
         });
         transactionCount += 1;
-        Submission(transactionId);
+        emit Submission(transactionId);
     }
 ```
 
@@ -273,7 +273,7 @@ So the entire function should look like this:
         require(transactions[transactionId].destination != 0);
         require(confirmations[transactionId][msg.sender] == false);
         confirmations[transactionId][msg.sender] = true;
-        Confirmation(msg.sender, transactionId);
+        emit Confirmation(msg.sender, transactionId);
         executeTransaction(transactionId);
     }
 ```
@@ -301,7 +301,7 @@ I define the helper function isConfirmed, which we can call from the `executeTra
 ```javascript
     function isConfirmed(uint transactionId)
         public
-        constant
+        view
         returns (bool)
     {
         uint count = 0;
@@ -332,13 +332,14 @@ We have two possible outcomes of this function -- the transaction is not guarant
     {
         require(transactions[transactionId].executed == false);
         if (isConfirmed(transactionId)) {
-            Transaction tx = transactions[transactionId];
-            tx.executed = true;
-            if (tx.destination.call.value(tx.value)(tx.data))
-                Execution(transactionId);
+            Transaction t = transactions[transactionId];
+            t.executed = true;
+            (bool success, bytes memory rdata) = t.destination.call.value(t.value)(t.data);
+            if (success)
+                emit Execution(transactionId);
             else {
-                ExecutionFailure(transactionId);
-                tx.executed = false;
+                emit ExecutionFailure(transactionId);
+                t.executed = false;
             }
         }
     }
@@ -384,7 +385,7 @@ The owners array and the deployment scripts are already in the file.
 We are only going to require 2 confirmations for the sake of simplicity.
 
 
-To deploy the contracts, start the development environment by running truffle develop in a terminal window at the project directory. The truffle command line will appear
+To deploy the contracts, start the development environment by running `truffle develop` in a terminal window at the project directory. The truffle command line will appear
 
 ```
 truffle(develop)> 
@@ -392,27 +393,28 @@ truffle(develop)>
 
 Deploy the contracts
 ```
-truffle(develop)> migrate
+truffle(develop)> migrate 
 ```
+If `migrate` does not work, try `migrate --reset`.
 
 And then get the deployed instances of the SimpleStorage.sol and MultiSignatureWallet.sol contracts.
 
 ```
-truffle(develop)> var ss = SimpleStorage.at(SimpleStorage.address)
-truffle(develop)> var ms = MultiSignatureWallet.at(MultiSignatureWallet.address)
+truffle(develop)> var ss = await SimpleStorage.at(SimpleStorage.address)
+truffle(develop)> var ms = await MultiSignatureWallet.at(MultiSignatureWallet.address)
 ```
 
 Check the state of the the SimpleStorage contract
 
 ```
 truffle(develop)> ss.storedData.call()
-BigNumber { s: 1, e: 0, c: [ 0 ] }
+<BN: 0>
 ```
 
 This means that it is 0. You can verify by waiting for the promise to resolve and converting the answer to a string. Try it with:
 
 ```
-ss.get.call().then(res => { console.log( res.toString(10) )} )
+ss.storedData.call().then(res => { console.log( res.toString(10) )} )
 0
 ```
 
@@ -425,10 +427,11 @@ If we want to update the SimpleStorage contract data to be 5, the encoded functi
 var encoded = ‘0x60fe47b10000000000000000000000000000000000000000000000000000000000000005’
 ```
 
-So the MultiSig contract call looks like:
+Let's get the available accounts and then make a call to the MultiSig contract:
 
 ```
-truffle(develop)> ms.submitTransaction(ss.address, 0, encoded, {from: web3.eth.accounts[0]})
+truffle(develop)> var accounts = await web3.eth.getAccounts()
+truffle(develop)> ms.submitTransaction(ss.address, 0, encoded, {from: accounts[0]})
 ```
 
 And we see the transaction information printed in the terminal window. In the logs, we can see that a “Submission” event was fired, as well as a “Confirmation” event, which is what we expect. 
@@ -437,7 +440,7 @@ And we see the transaction information printed in the terminal window. In the lo
 The current state of the MultiSig has one transaction that has not been executed and has one confirmation (from the address that submitted it). One more confirmation should cause the transaction to execute. Let’s use the second account to confirm it. The `confirmTransaction` function takes one input, the index of the Transaction to confirm.
 
 ```
-truffle(develop)> ms.confirmTransaction(0, {from: web3.eth.accounts[1]})
+truffle(develop)> ms.confirmTransaction(0, {from: accounts[1]})
 ```
 
 The transaction information is printed in the terminal. You should see two log events this time as well. A “Confirmation” event as well as an “Execution” event. This indicates that the call to SimpleStorage executed successfully. If it didn’t execute successfully, we would see an “ExecutionFailure” event there instead.
@@ -447,7 +450,7 @@ We can verify that the state of the contract was updated by running
 
 ```
 truffle(develop)> ss.storedData.call()
-BigNumber { s: 1, e: 0, c: [ 5 ] }
+<BN: 5>
 ```
 
 The `storedData` is now 5. And we can check that the address that updated the SimpleStorage contract was the MultiSig Wallet.
