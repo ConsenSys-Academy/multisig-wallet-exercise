@@ -86,7 +86,7 @@ We can create a modifier that checks these conditions
 
 ```javascript
     modifier validRequirement(uint ownerCount, uint _required) {
-        if (   _required > ownerCount || _required == 0 || ownerCount == 0)
+        if (_required > ownerCount || _required == 0 || ownerCount == 0)
             revert();
         _;
     }  
