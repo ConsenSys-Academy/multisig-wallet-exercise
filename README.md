@@ -86,9 +86,7 @@ We can create a modifier that checks these conditions
 
 ```javascript
     modifier validRequirement(uint ownerCount, uint _required) {
-        if (   _required > ownerCount
-            || _required == 0
-            || ownerCount == 0)
+        if (   _required > ownerCount || _required == 0 || ownerCount == 0)
             revert();
         _;
     }  
@@ -424,7 +422,7 @@ Let’s submit a transaction to update the state of the SimpleStorage contract t
 If we want to update the SimpleStorage contract data to be 5, the encoded function signature and input parameters would look like this:
 
 ```javascript
-var encoded = ‘0x60fe47b10000000000000000000000000000000000000000000000000000000000000005’
+var encoded = '0x60fe47b10000000000000000000000000000000000000000000000000000000000000005'
 ```
 
 Let's get the available accounts and then make a call to the MultiSig contract:
@@ -457,9 +455,9 @@ The `storedData` is now 5. And we can check that the address that updated the Si
 
 ```
 truffle(develop)> ss.caller.call()
-‘0x855d1c79ad3fb086d516554dc7187e3fdfc1c79a’
+'0x855d1c79ad3fb086d516554dc7187e3fdfc1c79a'
 truffle(develop)> ms.address
-‘0x855d1c79ad3fb086d516554dc7187e3fdfc1c79a’
+'0x855d1c79ad3fb086d516554dc7187e3fdfc1c79a'
 ```
 
 The two addresses are the same!
