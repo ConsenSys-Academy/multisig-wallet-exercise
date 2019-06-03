@@ -330,7 +330,7 @@ We have two possible outcomes of this function -- the transaction is not guarant
     {
         require(transactions[transactionId].executed == false);
         if (isConfirmed(transactionId)) {
-            Transaction t = transactions[transactionId];
+            Transaction storage t = transactions[transactionId];
             t.executed = true;
             (bool success, bytes memory rdata) = t.destination.call.value(t.value)(t.data);
             if (success)
