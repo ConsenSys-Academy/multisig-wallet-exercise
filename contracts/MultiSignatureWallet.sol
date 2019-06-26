@@ -9,8 +9,17 @@ contract MultiSignatureWallet {
       bytes data;
     }
 
-    /// @dev Fallback function, which accepts ether when sent to contract
-    function() external payable {}
+    event Deposit(address indexed sender, uint value);
+
+    /// @dev Fallback function allows to deposit ether.
+    function()
+    	external
+        payable
+    {
+        if (msg.value > 0) {
+            Deposit(msg.sender, msg.value);
+	}
+    }
 
     /*
      * Public functions
