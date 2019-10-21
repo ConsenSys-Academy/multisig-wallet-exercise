@@ -17,7 +17,7 @@ contract MultiSignatureWallet {
         payable
     {
         if (msg.value > 0) {
-            Deposit(msg.sender, msg.value);
+            emit Deposit(msg.sender, msg.value);
 	}
     }
 
