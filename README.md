@@ -236,7 +236,7 @@ There are several checks that we will want to verify before we execute this tran
 
 ```javascript
     require(isOwner[msg.sender]);
-    require(transactions[transactionId].destination != 0);
+    require(transactions[transactionId].destination != address(0));
     require(confirmations[transactionId][msg.sender] == false);
 ```
 
@@ -268,7 +268,7 @@ So the entire function should look like this:
         public
     {
         require(isOwner[msg.sender]);
-        require(transactions[transactionId].destination != 0);
+        require(transactions[transactionId].destination != address(0));
         require(confirmations[transactionId][msg.sender] == false);
         confirmations[transactionId][msg.sender] = true;
         emit Confirmation(msg.sender, transactionId);
